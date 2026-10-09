@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Complete</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: rgb(27, 32, 99);
+      color: #fff;
+      font-family: Roboto, Arial, Helvetica, sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* confetti layer */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .piece { position: absolute; display: block; }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 40px 16px 60px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 400;
+      margin: 0 0 30px;
+    }
+    .subtitle {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0 0 30px;
+    }
+
+    .panel {
+      background: #fff;
+      color: #222;
+      border-radius: 6px;
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      padding: 40px 0;
+      text-align: left;
+    }
+    .panel .art {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 0 30px;
+    }
+    .panel .art svg { width: 100%; max-width: 240px; height: auto; }
+    .panel .divider {
+      width: 2px;
+      align-self: stretch;
+      background: #e3e3e3;
+    }
+    .panel .text {
+      flex: 1;
+      padding: 0 40px 0 64px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .panel .text p { margin: 0 0 24px; }
+    .panel .text p:last-child { margin-bottom: 0; }
+
+    .btn {
+      display: inline-block;
+      margin-top: 32px;
+      background: rgb(254, 219, 0);
+      color: #1a1a1a;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 14px 24px;
+      border-radius: 26px;
+      text-decoration: none;
+      border: 1px solid #1a1a1a;
+    }
+    .btn:hover { background: rgb(255, 228, 64); }
+
+    .score-link {
+      display: block;
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      .panel { flex-direction: column; padding: 30px 0; }
+      .panel .divider { width: 80%; height: 2px; align-self: center; margin: 24px 0; }
+      .panel .text { padding: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="confetti" aria-hidden="true"></div>
+
+  <main>
+    <h1>Congratulations!</h1>
+    <p class="subtitle">The test is complete, and your answers have been submitted.</p>
+
+    <div class="panel">
+      <div class="art">
+        <!-- laptop with smiley face -->
+        <svg viewBox="0 0 240 220" role="img" aria-label="Laptop showing a smiling face">
+          <circle cx="110" cy="108" r="96" fill="#f3f4fa" stroke="#e4e6f2" stroke-width="3"/>
+          <ellipse cx="110" cy="190" rx="116" ry="5" fill="#dcdde3"/>
+          <!-- screen lid -->
+          <rect x="18" y="40" width="200" height="126" rx="8" fill="#d6dae3" stroke="#3a3a3a" stroke-width="3"/>
+          <polygon points="160,43 215,43 215,140" fill="#c8cdd8"/>
+          <rect x="40" y="54" width="154" height="98" fill="#fafafa" stroke="#3a3a3a" stroke-width="3"/>
+          <!-- smiley -->
+          <circle cx="117" cy="103" r="35" fill="#cdeefc" stroke="#3a3a3a" stroke-width="3"/>
+          <path d="M100 96 q6 -7 12 0" fill="none" stroke="#3a3a3a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M122 96 q6 -7 12 0" fill="none" stroke="#3a3a3a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M99 108 q18 24 36 0 z" fill="#fff" stroke="#3a3a3a" stroke-width="3" stroke-linejoin="round"/>
+          <!-- base -->
+          <rect x="2" y="166" width="232" height="14" rx="5" fill="#d6dae3" stroke="#3a3a3a" stroke-width="3"/>
+          <line x1="6" y1="173" x2="230" y2="173" stroke="#3a3a3a" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="divider"></div>
+      <div class="text">
+        <p><strong>Your proctor will dismiss you</strong> when it’s time to go.</p>
+        <p><strong>Please be quiet</strong>; other students may still be testing.</p>
+      </div>
+    </div>
+
+    <a class="btn" href="index.html">Return to Homepage</a>
+    <a class="score-link" href="results.html"></a>
+  </main>
+
+  <script>
+    // scatter confetti pieces around the page
+    const colors = ["#ff8fa3", "#ffd400", "#8fe3ef", "#e88bb5", "#b8c4ff"];
+    const layer = document.getElementById("confetti");
+    for (let i = 0; i < 60; i++) {
+      const p = document.createElement("span");
+      p.className = "piece";
+      const round = Math.random() < 0.2;
+      const thin = !round && Math.random() < 0.35;
+      const w = round ? 8 : thin ? 2 : 4 + Math.random() * 4;
+      const h = round ? 8 : thin ? 12 : 6 + Math.random() * 4;
+      p.style.width = w + "px";
+      p.style.height = h + "px";
+      p.style.left = Math.random() * 100 + "%";
+      p.style.top = Math.random() * 100 + "%";
+      p.style.background = thin ? "#5c66b8" : colors[Math.floor(Math.random() * colors.length)];
+      p.style.borderRadius = round ? "50%" : "1px";
+      p.style.transform = "rotate(" + Math.floor(Math.random() * 360) + "deg)";
+      layer.appendChild(p);
+    }
+  </script>
+</body>
+</html>

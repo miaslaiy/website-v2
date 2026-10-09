@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Practice Score</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="page-top">
+      <div class="brand">Digital SAT&nbsp;·&nbsp;Practice</div>
+      <nav>
+        <a href="help.html">Help</a>
+        <a href="index.html">Home</a>
+      </nav>
+    </div>
+
+    <div class="page-body" style="align-items:flex-start;">
+      <div class="card" style="max-width:720px;text-align:left;">
+        <h1 style="text-align:center;">Your Practice Score</h1>
+        <p class="score-sub" id="student-line" style="text-align:center;"></p>
+
+        <div style="text-align:center;">
+          <div class="score-big" id="total-score">—</div>
+          <div class="score-sub">Estimated total (400–1600 scale)</div>
+        </div>
+
+        <div class="breakdown" id="section-breakdown"></div>
+
+        <h2 style="margin-top:10px;">Question review</h2>
+        <div id="filter-row" style="margin-bottom:12px;">
+          <button class="btn btn-outline" data-filter="all">All</button>
+          <button class="btn btn-outline" data-filter="wrong">Incorrect</button>
+          <button class="btn btn-outline" data-filter="skipped">Skipped</button>
+        </div>
+        <div class="answers-list" id="answers-list"></div>
+
+        <p style="text-align:center;margin-top:26px;">
+          <a class="btn" href="startcode.html">Take it again</a>
+          <a class="btn btn-outline" href="index.html">Home</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="page-foot">Estimated scores are rough approximations for practice only.</div>
+  </div>
+
+  <script>
+    let data = null;
+    try { data = JSON.parse(sessionStorage.getItem("sat-results")); } catch (_) {}
+
+    if (!data) {
+      document.querySelector(".card").innerHTML =
+        "<h1>No results yet</h1><p>Finish a practice test to see your score.</p>" +
+        '<p style="text-align:center;"><a class="btn" href="startcode.html">Start the test</a></p>';
+    } else {
+      document.getElementById("student-line").textContent = data.student;
+
+      // group by section
+      const rw = data.summary.filter(s => s.subject === "rw");
+      const math = data.summary.filter(s => s.subject === "math");
+
+      const rwCorrect = sum(rw, "correct"), rwTotal = sum(rw, "total");
+      const mathCorrect = sum(math, "correct"), mathTotal = sum(math, "total");
+
+      const rwScore = scaled(rwCorrect, rwTotal);
+      const mathScore = scaled(mathCorrect, mathTotal);
+      document.getElementById("total-score").textContent = rwScore + mathScore;
+
+      const bd = document.getElementById("section-breakdown");
+      bd.innerHTML =
+        row("Reading and Writing", rwScore + " (" + rwCorrect + "/" + rwTotal + " correct)") +
+        row("Math", mathScore + " (" + mathCorrect + "/" + mathTotal + " correct)") +
+        data.summary.map(s => row("&nbsp;&nbsp;• " + s.label, s.correct + " / " + s.total)).join("");
+
+      // answer list
+      const allItems = [];
+      data.summary.forEach(s => {
+        s.detail.forEach((d, i) => allItems.push(Object.assign({ mod: s.label, num: i + 1 }, d)));
+      });
+
+      let filter = "all";
+      function draw() {
+        const list = document.getElementById("answers-list");
+        const items = allItems.filter(d =>
+          filter === "all" ? true :
+          filter === "wrong" ? !d.ok :
+          /* skipped */ !d.answered
+        );
+        if (!items.length) { list.innerHTML = '<p class="score-sub">Nothing to show here — nice work.</p>'; return; }
+        list.innerHTML = items.map(d => {
+          const tag = !d.answered ? '<span class="tag skipped">Skipped</span>' :
+                      d.ok ? '<span class="tag correct">Correct</span>' :
+                             '<span class="tag wrong">Incorrect</span>';
+          return '<div class="ans-item">' +
+            '<div>' + tag + ' <span class="score-sub">' + d.mod + " · Q" + d.num + "</span></div>" +
+            '<div class="q">' + d.question + "</div>" +
+            '<div class="detail">Your answer: ' + esc(d.given) + "<br>" +
+            "Correct answer: " + esc(d.correct) +
+            (d.rationale ? "<br><em>" + esc(d.rationale) + "</em>" : "") +
+            "</div></div>";
+        }).join("");
+      }
+      document.getElementById("filter-row").addEventListener("click", (e) => {
+        const b = e.target.closest("button"); if (!b) return;
+        filter = b.dataset.filter; draw();
+      });
+      draw();
+    }
+
+    function sum(arr, key) { return arr.reduce((a, s) => a + s[key], 0); }
+    function scaled(correct, total) {
+      if (!total) return 200;
+      const pct = correct / total;
+      return Math.round((200 + pct * 600) / 10) * 10; // 200–800, rounded to 10
+    }
+    function row(label, val) {
+      return '<div class="breakdown-row"><span>' + label + "</span><span>" + val + "</span></div>";
+    }
+    function esc(s) {
+      return String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    }
+  </script>
+</body>
+</html>

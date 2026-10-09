@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital SAT Practice — Test</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="test-body" id="shell">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="test-header">
+      <div>
+        <div class="module-name" id="module-name">Section 1, Module 1: Reading and Writing</div>
+        <button class="directions-toggle" id="directions-toggle">Directions <span class="caret">&#9662;</span></button>
+      </div>
+
+      <div class="timer-wrap" id="timer-wrap">
+        <span class="timer" id="timer">32:00</span>
+        <button class="timer-hide" id="timer-hide">Hide</button>
+      </div>
+
+      <div class="tools" id="tools">
+        <button id="calc-btn" hidden><span class="ti">&#128425;</span><span>Calculator</span></button>
+        <button id="ref-btn" hidden><span class="ti">&#9707;</span><span>Reference</span></button>
+        <button id="hl-btn">
+          <span class="ti-svg" aria-hidden="true">
+            <!-- highlighter -->
+            <svg viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M13.5 2.5 l4 4 -8 8 -4 -4 z"/>
+              <path d="M5.5 10.5 l-1.5 5.5 4 -1.5"/>
+              <path d="M4 16 l-1.5 1.5"/>
+              <path d="M2 20.5 h16"/>
+            </svg>
+            <!-- note -->
+            <svg viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M3 2.5 h14 v11 l-6 6 h-8 z"/>
+              <path d="M17 13.5 h-6 v6"/>
+              <path d="M6 7 h8 M6 10.5 h8"/>
+            </svg>
+          </span>
+          <span>Highlights &amp; Notes</span>
+        </button>
+        <button id="more-btn"><span class="ti">&#8942;</span><span>More</span></button>
+      </div>
+    </header>
+    <hr class="rainbow-rule" />
+
+    <!-- ===================== MAIN ===================== -->
+    <main class="test-main" id="main">
+      <section class="pane left" id="left-pane">
+        <p class="passage" id="passage"></p>
+      </section>
+      <div class="divider" id="divider"></div>
+      <section class="pane right" id="right-pane">
+        <div id="question-area"></div>
+      </section>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <hr class="rainbow-rule" />
+    <footer class="test-footer">
+      <div class="student-name" id="student-name">Ram Penjarla</div>
+      <div>
+        <button class="nav-open" id="nav-open">
+          Question <span id="fq-num">1</span> of <span id="fq-total">12</span> <span class="caret">&#9652;</span>
+        </button>
+      </div>
+      <div class="footer-right">
+        <button class="btn" id="back-btn" style="display:none;">Back</button>
+        <button class="btn" id="next-btn">Next</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===================== NAV POPUP ===================== -->
+  <div class="navpop" id="navpop">
+    <h3 id="navpop-title">Section 1, Module 1: Reading and Writing</h3>
+    <div class="legend">
+      <span><i class="swatch cur"></i> Current</span>
+      <span><i class="swatch unans"></i> Unanswered</span>
+      <span><i class="swatch ans"></i> Answered</span>
+      <span><i class="swatch mk"></i> For review</span>
+    </div>
+    <div class="nav-grid" id="nav-grid"></div>
+    <div class="actions">
+      <button class="btn btn-outline" id="goto-review">Go to Review Page</button>
+    </div>
+  </div>
+
+  <!-- ===================== DIRECTIONS MODAL ===================== -->
+  <div class="overlay" id="directions-overlay">
+    <div class="modal">
+      <h2>Directions</h2>
+      <p id="directions-text"></p>
+      <div class="close-row"><button class="btn" data-close>Close</button></div>
+    </div>
+  </div>
+
+  <!-- ===================== MORE MODAL ===================== -->
+  <div class="overlay" id="more-overlay">
+    <div class="modal">
+      <h2>More</h2>
+      <ul style="line-height:2;">
+        <li><button class="link" id="more-help">Help</button></li>
+        <li><button class="link" id="more-restart">Exit &amp; restart practice test</button></li>
+      </ul>
+      <div class="close-row"><button class="btn" data-close>Close</button></div>
+    </div>
+  </div>
+
+  <!-- ===================== REFERENCE MODAL ===================== -->
+  <div class="overlay" id="ref-overlay">
+    <div class="modal">
+      <h2>Reference</h2>
+      <div style="line-height:1.9;">
+        <p>Circle: A = πr² &nbsp;·&nbsp; C = 2πr</p>
+        <p>Rectangle: A = ℓw &nbsp;·&nbsp; Triangle: A = ½bh</p>
+        <p>Right triangle: a² + b² = c²</p>
+        <p>Special right triangles: 30–60–90 → x, x√3, 2x &nbsp;·&nbsp; 45–45–90 → x, x, x√2</p>
+        <p>Rectangular solid: V = ℓwh &nbsp;·&nbsp; Cylinder: V = πr²h</p>
+        <p>Sphere: V = 4⁄3 πr³ &nbsp;·&nbsp; Cone: V = 1⁄3 πr²h</p>
+        <p>The number of degrees of arc in a circle is 360. The sum of the measures of the angles of a triangle is 180.</p>
+      </div>
+      <div class="close-row"><button class="btn" data-close>Close</button></div>
+    </div>
+  </div>
+
+  <!-- ===================== CALCULATOR MODAL ===================== -->
+  <div class="overlay" id="calc-overlay">
+    <div class="modal" style="max-width:320px;">
+      <h2>Calculator</h2>
+      <input id="calc-display" class="spr-input" style="width:100%;text-align:right;" value="" readonly />
+      <div id="calc-keys" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
+        <button class="btn btn-outline" data-k="7">7</button>
+        <button class="btn btn-outline" data-k="8">8</button>
+        <button class="btn btn-outline" data-k="9">9</button>
+        <button class="btn btn-outline" data-k="/">÷</button>
+        <button class="btn btn-outline" data-k="4">4</button>
+        <button class="btn btn-outline" data-k="5">5</button>
+        <button class="btn btn-outline" data-k="6">6</button>
+        <button class="btn btn-outline" data-k="*">×</button>
+        <button class="btn btn-outline" data-k="1">1</button>
+        <button class="btn btn-outline" data-k="2">2</button>
+        <button class="btn btn-outline" data-k="3">3</button>
+        <button class="btn btn-outline" data-k="-">−</button>
+        <button class="btn btn-outline" data-k="0">0</button>
+        <button class="btn btn-outline" data-k=".">.</button>
+        <button class="btn btn-outline" data-k="(">(</button>
+        <button class="btn btn-outline" data-k="+">+</button>
+        <button class="btn btn-outline" data-k=")">)</button>
+        <button class="btn btn-outline" data-k="C">C</button>
+        <button class="btn btn-outline" data-k="back">⌫</button>
+        <button class="btn" data-k="=">=</button>
+      </div>
+      <div class="close-row"><button class="btn btn-outline" data-close>Close</button></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------------- state ---------------- */
+    const MODULES = TEST.modules;
+    let state = loadProgress();
+
+    function freshProgress() {
+      const p = { moduleIndex: 0, questionIndex: 0, view: "question", deadline: null, responses: {}, marked: {}, struck: {} };
+      MODULES.forEach(m => { p.responses[m.id] = {}; p.marked[m.id] = {}; p.struck[m.id] = {}; });
+      return p;
+    }
+    function loadProgress() {
+      try {
+        const raw = sessionStorage.getItem("sat-progress");
+        if (raw) {
+          const p = JSON.parse(raw);
+          if (p && typeof p.moduleIndex === "number") return p;
+        }
+      } catch (_) {}
+      return freshProgress();
+    }
+    function save() {
+      try { sessionStorage.setItem("sat-progress", JSON.stringify(state)); } catch (_) {}
+    }
+
+    /* ---------------- element refs ---------------- */
+    const $ = (id) => document.getElementById(id);
+    const shell = $("shell");
+    const moduleNameEl = $("module-name");
+    const passageEl = $("passage");
+    const qArea = $("question-area");
+    const timerEl = $("timer");
+    const backBtn = $("back-btn");
+    const nextBtn = $("next-btn");
+    const navOpen = $("nav-open");
+    const navpop = $("navpop");
+    const navGrid = $("nav-grid");
+    const fqNum = $("fq-num");
+    const fqTotal = $("fq-total");
+
+    document.getElementById("student-name").textContent = TEST.student;
+
+    function resetPaneWidths() {
+      $("left-pane").style.width = "";
+      $("right-pane").style.width = "";
+    }
+
+    /* ---------------- helpers ---------------- */
+    const curModule = () => MODULES[state.moduleIndex];
+    const curQuestions = () => curModule().questions;
+    const curQuestion = () => curQuestions()[state.questionIndex];
+    const LETTERS = ["A", "B", "C", "D"];
+
+    function responseFor(qi) { return state.responses[curModule().id][qi]; }
+    function isAnswered(qi) {
+      const r = state.responses[curModule().id][qi];
+      return r !== undefined && r !== null && r !== "";
+    }
+    function isMarked(qi) { return !!state.marked[curModule().id][qi]; }
+
+    /* ---------------- timer ---------------- */
+    let timerHandle = null;
+    function startTimer() {
+      if (!state.deadline) state.deadline = Date.now() + curModule().minutes * 60 * 1000;
+      save();
+      clearInterval(timerHandle);
+      tick();
+      timerHandle = setInterval(tick, 1000);
+    }
+    function tick() {
+      let ms = state.deadline - Date.now();
+      if (ms <= 0) {
+        ms = 0;
+        clearInterval(timerHandle);
+        timerEl.textContent = "0:00";
+        finishModule(true);
+        return;
+      }
+      const total = Math.round(ms / 1000);
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      timerEl.textContent = m + ":" + String(s).padStart(2, "0");
+      timerEl.classList.toggle("low", total <= 300);
+    }
+
+    /* ---------------- rendering ---------------- */
+    function render() {
+      const mod = curModule();
+      moduleNameEl.textContent = mod.label;
+      $("navpop-title").textContent = mod.label;
+      $("directions-text").textContent = mod.directions;
+      fqTotal.textContent = mod.questions.length;
+
+      // math tools
+      const isMath = mod.subject === "math";
+      $("calc-btn").hidden = !isMath;
+      $("ref-btn").hidden = !isMath;
+
+      if (state.view === "question") renderQuestion();
+      else if (state.view === "review") renderReview();
+      else if (state.view === "break") renderBreak();
+      save();
+    }
+
+    function renderQuestion() {
+      const mod = curModule();
+      const q = curQuestion();
+      const qi = state.questionIndex;
+
+      // layout: two-pane only for RW questions that have a passage
+      const twoPane = mod.subject === "rw";
+      shell.classList.toggle("single-mode", !twoPane);
+
+      if (twoPane) {
+        const parts = String(q.passage || "").split(/\n+/).filter(s => s.trim());
+        passageEl.innerHTML = "";
+        parts.forEach((line, idx) => {
+          const p = document.createElement("p");
+          p.style.margin = idx === 0 ? "0 0 16px" : "16px 0 0";
+          p.textContent = line;
+          passageEl.appendChild(p);
+        });
+      } else {
+        passageEl.innerHTML = "";
+        resetPaneWidths();
+      }
+
+      const marked = isMarked(qi);
+      let html = "";
+      html += '<div class="q-top">';
+      html += '<div class="q-meta">';
+      html += '<span class="q-num">' + (qi + 1) + "</span>";
+      html += '<button class="mark-btn' + (marked ? " marked" : "") + '" id="mark-btn">' +
+              '<svg class="flag" viewBox="0 0 24 24" fill="' + (marked ? "#c9432f" : "none") +
+              '" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>' +
+              (marked ? "Marked for Review" : "Mark for Review") + "</button>";
+      html += "</div>";
+      if (mod.subject === "rw" || q.type !== "spr") {
+        html += '<button class="abc-btn" id="abc-btn" title="Answer Choice Eliminator"><span class="abc-strike">ABC</span></button>';
+      }
+      html += "</div>";
+      html += '<hr class="rainbow-rule q-rule" />';
+
+      // figure (table)
+      if (q.figure && q.figure.type === "table") {
+        html += '<div class="figure"><table>';
+        html += "<caption>" + q.figure.caption + "</caption>";
+        html += "<thead><tr>" + q.figure.headers.map(h => "<th>" + h + "</th>").join("") + "</tr></thead><tbody>";
+        html += q.figure.rows.map(r => "<tr>" + r.map(c => "<td>" + c + "</td>").join("") + "</tr>").join("");
+        html += "</tbody></table></div>";
+      }
+
+      // for math, the passage sits above the question
+      if (mod.subject === "math" && q.passage) {
+        html += '<p class="q-text" style="font-weight:400;">' + q.passage + "</p>";
+      }
+
+      html += '<p class="q-text">' + q.question + "</p>";
+
+      if (q.type === "spr") {
+        const val = responseFor(qi) || "";
+        html += '<input class="spr-input" id="spr-input" inputmode="text" value="' + escapeAttr(val) + '" placeholder="Answer" />';
+        html += '<p class="spr-note">Enter your answer as an integer or decimal. If negative, include the minus sign.</p>';
+      } else {
+        html += '<div class="options" id="options">';
+        const sel = responseFor(qi);
+        const struck = state.struck[mod.id][qi] || [];
+        q.options.forEach((opt, i) => {
+          const isSel = sel === i;
+          const isStruck = struck[i];
+          html += '<div class="option-row' + (isStruck ? " struck" : "") + '">' +
+                  '<div class="option' + (isSel ? " selected" : "") + (isStruck ? " struck" : "") + '" data-i="' + i + '">' +
+                  '<span class="letter">' + LETTERS[i] + "</span>" +
+                  '<span class="opt-text">' + opt + "</span>" +
+                  "</div>" +
+                  (isStruck
+                    ? '<button class="strike-toggle undo" data-strike="' + i + '" title="Undo cross out">Undo</button>'
+                    : '<button class="strike-toggle" data-strike="' + i + '" title="Cross out answer">' + LETTERS[i] + "</button>") +
+                  "</div>";
+        });
+        html += "</div>";
+      }
+
+      qArea.innerHTML = html;
+      // cross-out mode is on unless the student has turned it off
+      const crossoutOn = state.struck[mod.id]["_mode"] !== false;
+      shell.classList.toggle("crossout-on", crossoutOn);
+
+      // wire up
+      $("mark-btn").addEventListener("click", () => {
+        state.marked[mod.id][qi] = !isMarked(qi);
+        renderQuestion(); save();
+      });
+      const abc = $("abc-btn");
+      if (abc) {
+        abc.classList.toggle("active", crossoutOn);
+        abc.addEventListener("click", () => {
+          state.struck[mod.id]["_mode"] = !crossoutOn;
+          renderQuestion();
+        });
+      }
+
+      if (q.type === "spr") {
+        const input = $("spr-input");
+        input.addEventListener("input", () => {
+          state.responses[mod.id][qi] = input.value.trim();
+          save(); updateFooter();
+        });
+      } else {
+        qArea.querySelectorAll(".option").forEach(el => {
+          el.addEventListener("click", (e) => {
+            if (e.target.closest(".strike-toggle")) return;
+            const i = Number(el.dataset.i);
+            state.responses[mod.id][qi] = i;
+            save(); renderQuestion(); updateFooter();
+          });
+        });
+        qArea.querySelectorAll(".strike-toggle").forEach(el => {
+          el.addEventListener("click", () => {
+            const i = Number(el.dataset.strike);
+            const arr = state.struck[mod.id][qi] || (state.struck[mod.id][qi] = []);
+            arr[i] = !arr[i];
+            if (arr[i] && responseFor(qi) === i) state.responses[mod.id][qi] = null;
+            save(); renderQuestion();
+          });
+        });
+      }
+
+      backBtn.style.display = qi === 0 ? "none" : "inline-block";
+      nextBtn.textContent = "Next";
+      navOpen.style.display = "";
+      updateFooter();
+    }
+
+    function updateFooter() {
+      fqNum.textContent = state.questionIndex + 1;
+    }
+
+    function renderReview() {
+      const mod = curModule();
+      shell.classList.add("single-mode");
+      shell.classList.remove("crossout-on");
+      resetPaneWidths();
+      passageEl.innerHTML = "";
+      navOpen.style.display = "none";
+      backBtn.style.display = "inline-block";
+      nextBtn.textContent = state.moduleIndex === MODULES.length - 1 ? "Finish" : "Next";
+
+      const total = mod.questions.length;
+      let answered = 0, marked = 0;
+      for (let i = 0; i < total; i++) { if (isAnswered(i)) answered++; if (isMarked(i)) marked++; }
+
+      let html = '<div class="review-wrap">';
+      html += "<h1>Check Your Work</h1>";
+      html += '<p class="review-sub">On test day, you won’t be able to move on to the next module until time expires.<br>' +
+              "For this practice test, you can review your answers and then continue.</p>";
+      html += '<p class="review-sub"><strong>' + answered + " of " + total + "</strong> answered &nbsp;·&nbsp; <strong>" +
+              marked + "</strong> marked for review</p>";
+      html += '<div class="nav-grid" id="review-grid"></div>';
+      html += "</div>";
+      qArea.innerHTML = html;
+
+      const grid = $("review-grid");
+      for (let i = 0; i < total; i++) {
+        const cell = document.createElement("button");
+        cell.className = "nav-cell" + (isAnswered(i) ? " answered" : "") + (isMarked(i) ? " marked" : "");
+        cell.textContent = i + 1;
+        cell.addEventListener("click", () => {
+          state.questionIndex = i;
+          state.view = "question";
+          render();
+        });
+        grid.appendChild(cell);
+      }
+      updateFooterForReview();
+    }
+
+    function updateFooterForReview() {
+      fqNum.textContent = "—";
+    }
+
+    function renderBreak() {
+      clearInterval(timerHandle);
+      document.body.classList.add("break-mode");
+
+      const breakEnd = state.breakEnd || (state.breakEnd = Date.now() + 10 * 60 * 1000);
+      save();
+
+      let el = document.getElementById("break-screen");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "break-screen";
+        document.body.appendChild(el);
+      }
+      el.innerHTML =
+        '<div class="break-timer-box">' +
+          '<div class="lbl">Remaining Break Time:</div>' +
+          '<div class="big" id="break-clock">10:00</div>' +
+        "</div>" +
+        '<div class="break-copy">' +
+          "<h1>Take a Break: Do Not Close Your Device</h1>" +
+          "<p>After the break, a <strong>Resume Testing Now</strong> button will appear and you’ll start the next section.</p>" +
+          "<p><strong>Follow these rules during the break:</strong></p>" +
+          "<ol>" +
+            "<li>Do not disturb students who are still testing.</li>" +
+            "<li>Do not exit the app or close your laptop.</li>" +
+            "<li>Do not access phones, smartwatches, textbooks, notes, or the internet.</li>" +
+            "<li>Do not eat or drink near any testing device.</li>" +
+            "<li>Do not speak in the test room; outside the test room, do not discuss the exam with anyone.</li>" +
+          "</ol>" +
+          '<p class="break-actions"><button class="btn" id="resume-btn" hidden>Resume Testing Now</button>' +
+          
+        "</div>" +
+        '<div class="break-name">' + TEST.student + "</div>";
+
+      const clock = $("break-clock");
+      const resumeBtn = $("resume-btn");
+      const bh = setInterval(() => {
+        let ms = state.breakEnd - Date.now();
+        if (ms <= 0) {
+          clearInterval(bh);
+          clock.textContent = "0:00";
+          resumeBtn.hidden = false;
+          return;
+        }
+        const t = Math.round(ms / 1000);
+        clock.textContent = Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0");
+      }, 1000);
+
+      resumeBtn.addEventListener("click", () => { clearInterval(bh); endBreak(); });
+      $("skip-break").addEventListener("click", () => { clearInterval(bh); endBreak(); });
+
+      function endBreak() {
+        state.breakEnd = null;
+        document.body.classList.remove("break-mode");
+        const bs = document.getElementById("break-screen");
+        if (bs) bs.remove();
+        nextBtn.style.display = "";
+        advanceToModule(state.moduleIndex + 1);
+      }
+    }
+
+    /* ---------------- navigation ---------------- */
+    function goNext() {
+      if (state.view === "review") {
+        // leaving a module
+        const isLastModule = state.moduleIndex === MODULES.length - 1;
+        if (isLastModule) { finishTest(); return; }
+        if (curModule().subject === "rw" && MODULES[state.moduleIndex + 1].subject === "math") {
+          state.view = "break";
+          render();
+          return;
+        }
+        advanceToModule(state.moduleIndex + 1);
+        return;
+      }
+      if (state.questionIndex < curQuestions().length - 1) {
+        state.questionIndex++;
+        render();
+      } else {
+        state.view = "review";
+        render();
+      }
+    }
+
+    function goBack() {
+      if (state.view === "review") {
+        state.view = "question";
+        state.questionIndex = curQuestions().length - 1;
+        render();
+        return;
+      }
+      if (state.questionIndex > 0) {
+        state.questionIndex--;
+        render();
+      }
+    }
+
+    function advanceToModule(idx) {
+      state.moduleIndex = idx;
+      state.questionIndex = 0;
+      state.view = "question";
+      state.deadline = null;
+      save();
+      startTimer();
+      render();
+    }
+
+    function finishModule(timeUp) {
+      if (timeUp) {
+        state.view = "review";
+        render();
+        setTimeout(() => alert("Time is up for this module."), 50);
+      }
+    }
+
+    function finishTest() {
+      clearInterval(timerHandle);
+      // score
+      const summary = MODULES.map(mod => {
+        let correct = 0;
+        const detail = mod.questions.map((q, i) => {
+          const r = state.responses[mod.id][i];
+          let ok = false, given = "—";
+          if (q.type === "spr") {
+            given = (r === undefined || r === null || r === "") ? "—" : String(r);
+            ok = q.answers.some(a => normalize(a) === normalize(r));
+          } else {
+            if (r !== undefined && r !== null && r !== "") given = LETTERS[r] + ". " + q.options[r];
+            ok = r === q.correct;
+          }
+          if (ok) correct++;
+          return {
+            question: q.question,
+            given,
+            correct: q.type === "spr" ? q.answers.join(" or ") : LETTERS[q.correct] + ". " + q.options[q.correct],
+            ok,
+            answered: !(given === "—"),
+            rationale: q.rationale || "",
+          };
+        });
+        return { id: mod.id, label: mod.label, subject: mod.subject, total: mod.questions.length, correct, detail };
+      });
+      try {
+        sessionStorage.setItem("sat-results", JSON.stringify({ student: TEST.student, summary }));
+        sessionStorage.removeItem("sat-progress");
+      } catch (_) {}
+      window.location.href = "complete.html";
+    }
+
+    function normalize(v) {
+      if (v === undefined || v === null) return "";
+      let s = String(v).trim().replace(/\s+/g, "");
+      if (s.startsWith("+")) s = s.slice(1);
+      // treat simple fractions and decimals loosely
+      if (/^-?\d+\/\d+$/.test(s)) {
+        const [a, b] = s.split("/").map(Number);
+        if (b !== 0) return String(a / b);
+      }
+      const n = Number(s);
+      return Number.isFinite(n) ? String(n) : s.toLowerCase();
+    }
+
+    function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
+
+    /* ---------------- nav popup ---------------- */
+    function buildNavGrid() {
+      navGrid.innerHTML = "";
+      curQuestions().forEach((_, i) => {
+        const cell = document.createElement("button");
+        cell.className = "nav-cell" +
+          (i === state.questionIndex && state.view === "question" ? " current" : "") +
+          (isAnswered(i) ? " answered" : "") +
+          (isMarked(i) ? " marked" : "");
+        cell.textContent = i + 1;
+        cell.addEventListener("click", () => {
+          state.questionIndex = i;
+          state.view = "question";
+          toggleNav(false);
+          render();
+        });
+        navGrid.appendChild(cell);
+      });
+    }
+    function toggleNav(force) {
+      const show = force === undefined ? !navpop.classList.contains("show") : force;
+      if (show) buildNavGrid();
+      navpop.classList.toggle("show", show);
+    }
+    navOpen.addEventListener("click", () => toggleNav());
+    $("goto-review").addEventListener("click", () => {
+      toggleNav(false);
+      state.view = "review";
+      render();
+    });
+    document.addEventListener("click", (e) => {
+      if (navpop.classList.contains("show") && !navpop.contains(e.target) && e.target !== navOpen && !navOpen.contains(e.target)) {
+        toggleNav(false);
+      }
+    });
+
+    /* ---------------- footer buttons ---------------- */
+    nextBtn.addEventListener("click", goNext);
+    backBtn.addEventListener("click", goBack);
+
+    /* ---------------- modals ---------------- */
+    function openOverlay(el) { el.classList.add("show"); }
+    function closeOverlay(el) { el.classList.remove("show"); }
+    document.querySelectorAll(".overlay").forEach(ov => {
+      ov.addEventListener("click", (e) => { if (e.target === ov) closeOverlay(ov); });
+      ov.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeOverlay(ov)));
+    });
+    $("directions-toggle").addEventListener("click", () => openOverlay($("directions-overlay")));
+    $("more-btn").addEventListener("click", () => openOverlay($("more-overlay")));
+    $("ref-btn").addEventListener("click", () => openOverlay($("ref-overlay")));
+    $("calc-btn").addEventListener("click", () => openOverlay($("calc-overlay")));
+    $("hl-btn").addEventListener("click", () => alert("Highlights & Notes aren't available in this practice version."));
+    $("more-help").addEventListener("click", () => window.open("help.html", "_blank"));
+    $("more-restart").addEventListener("click", () => {
+      if (confirm("Exit and restart the practice test? Your progress will be lost.")) {
+        try { sessionStorage.removeItem("sat-progress"); } catch (_) {}
+        window.location.href = "index.html";
+      }
+    });
+
+    // timer hide
+    $("timer-hide").addEventListener("click", () => {
+      const hidden = timerEl.style.visibility === "hidden";
+      timerEl.style.visibility = hidden ? "visible" : "hidden";
+      $("timer-hide").textContent = hidden ? "Hide" : "Show";
+    });
+
+    /* ---------------- calculator ---------------- */
+    (function calc() {
+      const disp = $("calc-display");
+      $("calc-keys").addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        const k = btn.dataset.k;
+        if (k === "C") { disp.value = ""; return; }
+        if (k === "back") { disp.value = disp.value.slice(0, -1); return; }
+        if (k === "=") {
+          try {
+            if (!/^[0-9+\-*/().\s]+$/.test(disp.value)) throw 0;
+            // eslint-disable-next-line no-new-func
+            const r = Function('"use strict";return (' + disp.value + ")")();
+            disp.value = String(Math.round(r * 1e10) / 1e10);
+          } catch (_) { disp.value = "Error"; }
+          return;
+        }
+        if (disp.value === "Error") disp.value = "";
+        disp.value += k;
+      });
+    })();
+
+    /* ---------------- draggable divider ---------------- */
+    (function drag() {
+      const divider = $("divider");
+      const main = $("main");
+      const left = $("left-pane");
+      let dragging = false;
+      divider.addEventListener("mousedown", () => { dragging = true; document.body.style.userSelect = "none"; });
+      window.addEventListener("mouseup", () => { dragging = false; document.body.style.userSelect = ""; });
+      window.addEventListener("mousemove", (e) => {
+        if (!dragging) return;
+        const rect = main.getBoundingClientRect();
+        let pct = ((e.clientX - rect.left) / rect.width) * 100;
+        pct = Math.max(28, Math.min(72, pct));
+        left.style.width = pct + "%";
+        $("right-pane").style.width = (100 - pct) + "%";
+      });
+    })();
+
+    /* ---------------- keyboard ---------------- */
+    document.addEventListener("keydown", (e) => {
+      if (e.target.matches("input, textarea")) return;
+      if (state.view !== "question") return;
+      if (e.key === "ArrowRight") nextBtn.click();
+      if (e.key === "ArrowLeft" && backBtn.style.display !== "none") backBtn.click();
+    });
+
+    /* ---------------- boot ---------------- */
+    if (state.view === "break") {
+      render();
+    } else {
+      startTimer();
+      render();
+    }
+  })();
+  </script>
+</body>
+</html>

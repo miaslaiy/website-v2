@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Code</title>
+  <style>
+    body {
+      background: rgb(201, 223, 211);
+      font-family: Roboto, Arial, Helvetica, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin: 40px 0px 7px;
+      font-weight: normal;
+    }
+    p {
+      padding: 5px;
+    }
+
+    .code-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 0px;
+    }
+
+    .code-box {
+      width: 40px;
+      height: 50px;
+      text-align: center;
+      font-size: 21px;
+      border-radius: 10px;
+      border: 1px solid black;
+      padding: 5px 8px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-family: monospace;
+    }
+
+    button {
+      background: rgb(254, 219, 0);
+      color: rgb(0, 0, 0);
+      padding: 14px 24px;
+      text-align: center;
+      display: inline-block;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 26px;
+      border: 1px solid black;
+      font-size: 15px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      font-size: 1.1rem;
+    }
+
+    .blue-link {
+      color: blue;
+      text-decoration: underline;
+    }
+
+    .error-text {
+      color: #b00020;
+      min-height: 1.2em;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      margin: 34% 10% 1% 10%;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgb(255, 255, 255);
+      padding: 20px 2%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div><a href="help.html">Help</a></div>
+    <div><a href="index.html">Return to Home</a></div>
+  </header>
+
+  <h1>Start Code</h1>
+  <p>Enter your start code to begin testing. Good luck!</p>
+  <p>the start code contains <strong>numbers only.</strong></p>
+
+  <form id="code-form" autocomplete="off">
+    <div class="code-container">
+      <input type="text" inputmode="numeric" maxlength="1" class="code-box" aria-label="digit 1">
+      <input type="text" inputmode="numeric" maxlength="1" class="code-box" aria-label="digit 2">
+      <input type="text" inputmode="numeric" maxlength="1" class="code-box" aria-label="digit 3">
+      <input type="text" inputmode="numeric" maxlength="1" class="code-box" aria-label="digit 4">
+      <input type="text" inputmode="numeric" maxlength="1" class="code-box" aria-label="digit 5">
+      <input type="text" inputmode="numeric" maxlength="1" class="code-box" aria-label="digit 6">
+    </div>
+    <div class="error-text" id="err"></div>
+    <p>
+      <button type="submit" id="start-btn" disabled>Start Test</button>
+    </p>
+  </form>
+
+  <footer>
+    <p>you can <a href="https://satsuite.collegeboard.org/media/pdf/sats-proctor-manual.pdf" class="blue-link" target="_blank" rel="noopener">review the instructions</a> that the proctor reads aloud.</p>
+  </footer>
+
+  <script>
+    const START_CODE = "123456";
+    const boxes = [...document.querySelectorAll(".code-box")];
+    const startBtn = document.getElementById("start-btn");
+    const err = document.getElementById("err");
+
+    function current() { return boxes.map(b => b.value).join(""); }
+    function refresh() { startBtn.disabled = current().length !== 6; err.textContent = ""; }
+
+    boxes.forEach((box, i) => {
+      box.addEventListener("input", () => {
+        box.value = box.value.replace(/[^0-9]/g, "");
+        if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
+        refresh();
+      });
+      box.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !box.value && i > 0) boxes[i - 1].focus();
+      });
+      box.addEventListener("paste", (e) => {
+        e.preventDefault();
+        const digits = (e.clipboardData.getData("text") || "").replace(/[^0-9]/g, "").slice(0, 6);
+        digits.split("").forEach((d, k) => { if (boxes[k]) boxes[k].value = d; });
+        (boxes[Math.min(digits.length, 5)]).focus();
+        refresh();
+      });
+    });
+
+    document.getElementById("code-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (current() === START_CODE) {
+        try { sessionStorage.removeItem("sat-progress"); } catch (_) {}
+        window.location.href = "test.html";
+      } else {
+        err.textContent = "That start code isn't valid. Try 123456.";
+      }
+    });
+
+    boxes[0].focus();
+  </script>
+</body>
+</html>
