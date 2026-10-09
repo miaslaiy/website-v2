@@ -171,6 +171,14 @@ button { font-family: inherit; }
 .tools .ti { font-size: 1.15rem; line-height: 1; }
 .tools .ti-svg { display: flex; gap: 4px; align-items: flex-end; height: 1.15rem; }
 .tools .ti-svg svg { height: 100%; width: auto; }
+.tools .ref-icon {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  height: 1.15rem;
+  display: flex; align-items: flex-end;
+}
+.tools .ref-icon sup { font-size: .45em; margin-left: 1px; align-self: flex-start; }
 .tools button:hover { color: var(--blue); }
 
 /* ---------- main area ---------- */
@@ -488,8 +496,10 @@ button { font-family: inherit; }
   align-content: center;
   gap: 60px;
   padding: 60px 90px;
-  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
+/* one plain font for everything on the break screen */
+#break-screen * { font-family: inherit; }
 .break-timer-box {
   border: 2px solid #fff;
   border-radius: 10px;
@@ -501,15 +511,18 @@ button { font-family: inherit; }
   width: 100%;
 }
 .break-timer-box .lbl { font-size: 1.6rem; font-weight: 700; }
-.break-timer-box .big { font-size: 6rem; font-weight: 800; line-height: 1.05; margin-top: 8px; }
+.break-timer-box .big { font-size: 6rem; font-weight: 700; line-height: 1.05; margin-top: 8px; }
 
 .break-copy { align-self: center; max-width: 640px; }
-.break-copy h1 { font-size: 2.7rem; line-height: 1.15; margin: 0 0 20px; font-weight: 800; }
+.break-copy h1 { font-size: 2.7rem; line-height: 1.15; margin: 0 0 20px; font-weight: 700; }
 .break-copy p { font-size: 1.15rem; line-height: 1.5; }
 .break-copy ol { font-size: 1.1rem; line-height: 1.4; padding-left: 1.4em; }
 .break-copy ol li { margin: 14px 0; padding-left: 6px; }
 
 .break-actions { margin-top: 26px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+#resume-btn { background: #FEDB02; color: #000000; }
+#resume-btn:hover { background: #ffe433; }
+#resume-btn[hidden] { display: none; } /* DELETE ME SKIP BUTTON RESUME BUTTON TIMER NOT SHOWING*/
 .break-skip {
   background: none; border: 1px solid #666; color: #bbb;
   border-radius: 999px; padding: 8px 18px; cursor: pointer; font-size: .85rem;

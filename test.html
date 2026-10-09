@@ -22,8 +22,26 @@
       </div>
 
       <div class="tools" id="tools">
-        <button id="calc-btn" hidden><span class="ti">&#128425;</span><span>Calculator</span></button>
-        <button id="ref-btn" hidden><span class="ti">&#9707;</span><span>Reference</span></button>
+        <button id="calc-btn" hidden>
+          <span class="ti-svg" aria-hidden="true">
+            <!-- calculator: screen on top, 3x3 keypad -->
+            <svg viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
+              <rect x="1.5" y="1" width="13" height="18" rx="2"/>
+              <rect x="4" y="3.5" width="8" height="3.5" rx="0.5"/>
+              <g fill="currentColor" stroke="none">
+                <rect x="4" y="9.5" width="2" height="1.6"/><rect x="7" y="9.5" width="2" height="1.6"/><rect x="10" y="9.5" width="2" height="1.6"/>
+                <rect x="4" y="12.3" width="2" height="1.6"/><rect x="7" y="12.3" width="2" height="1.6"/><rect x="10" y="12.3" width="2" height="1.6"/>
+                <rect x="4" y="15.1" width="2" height="1.6"/><rect x="7" y="15.1" width="2" height="1.6"/><rect x="10" y="15.1" width="2" height="1.6"/>
+              </g>
+            </svg>
+          </span>
+          <span>Calculator</span>
+        </button>
+        <button id="ref-btn" hidden>
+          <!-- reference: bold italic serif x squared -->
+          <span class="ti ref-icon" aria-hidden="true"><i>x</i><sup>2</sup></span>
+          <span>Reference</span>
+        </button>
         <button id="hl-btn">
           <span class="ti-svg" aria-hidden="true">
             <!-- highlighter -->
@@ -457,7 +475,8 @@
       }
       el.innerHTML =
         '<div class="break-timer-box">' +
-          '<div class="lbl">Remaining Break Time:</div>' +
+          // secret skip: double-click the colon after "Time"
+          '<div class="lbl">Remaining Break Time<span id="skip-break">:</span></div>' +
           '<div class="big" id="break-clock">10:00</div>' +
         "</div>" +
         '<div class="break-copy">' +
@@ -471,8 +490,7 @@
             "<li>Do not eat or drink near any testing device.</li>" +
             "<li>Do not speak in the test room; outside the test room, do not discuss the exam with anyone.</li>" +
           "</ol>" +
-          '<p class="break-actions"><button class="btn" id="resume-btn" hidden>Resume Testing Now</button>' +
-          
+          '<p class="break-actions"><button class="btn" id="resume-btn" hidden>Resume Testing Now</button></p>' +
         "</div>" +
         '<div class="break-name">' + TEST.student + "</div>";
 
@@ -491,7 +509,7 @@
       }, 1000);
 
       resumeBtn.addEventListener("click", () => { clearInterval(bh); endBreak(); });
-      $("skip-break").addEventListener("click", () => { clearInterval(bh); endBreak(); });
+      $("skip-break").addEventListener("dblclick", () => { clearInterval(bh); endBreak(); });
 
       function endBreak() {
         state.breakEnd = null;
